@@ -4,6 +4,8 @@ import com.weg.FuncionarioDepartamento.dto.departamento.DepartamentoRequisicaoDT
 import com.weg.FuncionarioDepartamento.dto.departamento.DepartamentoRespostaDTO;
 import com.weg.FuncionarioDepartamento.service.DepartamentoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,27 +18,29 @@ public class DepartamentoController {
     private final DepartamentoService service;
 
     @PostMapping
-    public DepartamentoRespostaDTO criarDepartamento(@RequestBody DepartamentoRequisicaoDTO departamento){
-        return service.criarDepartamento(departamento);
+    public ResponseEntity<DepartamentoRespostaDTO> criarDepartamento(@RequestBody DepartamentoRequisicaoDTO departamento){
+        DepartamentoRespostaDTO departamentoSalvo = service.criarDepartamento(departamento);
+        return ResponseEntity.status(HttpStatus.CREATED).body(departamentoSalvo);
     }
 
     @GetMapping
-    public List<DepartamentoRespostaDTO> listarTodosDepartamentos(){
-        return service.listarTodosDepartamentos();
+    public ResponseEntity<List<DepartamentoRespostaDTO>> listarTodosDepartamentos(){
+        return ResponseEntity.ok(service.listarTodosDepartamentos());
     }
 
     @GetMapping("/{id}")
-    public DepartamentoRespostaDTO procurarDepartamentoPorID(@PathVariable Long id){
-        return service.procurarDepartamentoPorID(id);
+    public ResponseEntity<DepartamentoRespostaDTO> procurarDepartamentoPorID(@PathVariable Long id){
+        return ResponseEntity.ok(service.procurarDepartamentoPorID(id));
     }
 
     @PutMapping("/{id}")
-    public DepartamentoRespostaDTO atualizarDepartamentoPorID(@RequestBody DepartamentoRequisicaoDTO departamento, @PathVariable Long id){
-        return service.atualizarDepartamentoPorID(departamento, id);
+    public ResponseEntity<DepartamentoRespostaDTO> atualizarDepartamentoPorID(@RequestBody DepartamentoRequisicaoDTO departamento, @PathVariable Long id){
+        return ResponseEntity.ok(service.atualizarDepartamentoPorID(departamento, id));
     }
 
     @DeleteMapping("/{id}")
-    public void deletarDepartamento(@PathVariable Long id){
+    public ResponseEntity<Void> deletarDepartamento(@PathVariable Long id){
         service.deletarDepartamento(id);
+        return ResponseEntity.noContent().build();
     }
 }

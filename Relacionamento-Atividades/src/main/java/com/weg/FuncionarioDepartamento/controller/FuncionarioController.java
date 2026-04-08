@@ -5,6 +5,8 @@ import com.weg.FuncionarioDepartamento.dto.funcionario.FuncionarioRespostaDTO;
 import com.weg.FuncionarioDepartamento.service.FuncionarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,42 +19,44 @@ public class FuncionarioController {
     private final FuncionarioService service;
 
     @PostMapping
-    public FuncionarioRespostaDTO criarFuncionario(@Valid @RequestBody FuncionarioRequisicaoDTO funcionario){
-        return service.criarFuncionario(funcionario);
+    public ResponseEntity<FuncionarioRespostaDTO> criarFuncionario(@Valid @RequestBody FuncionarioRequisicaoDTO funcionario){
+        FuncionarioRespostaDTO funcionarioSalvo = service.criarFuncionario(funcionario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(funcionarioSalvo);
     }
 
     @GetMapping
-    public List<FuncionarioRespostaDTO> listarFuncionarios(){
-        return service.listarTodosFuncionarios();
+    public ResponseEntity<List<FuncionarioRespostaDTO>> listarFuncionarios(){
+        return ResponseEntity.ok(service.listarTodosFuncionarios());
     }
 
     @GetMapping("/{id}")
-    public FuncionarioRespostaDTO buscarFuncionarioPorID(@Valid @PathVariable Long id){
-        return service.buscarFuncionarioPorID(id);
+    public ResponseEntity<FuncionarioRespostaDTO> buscarFuncionarioPorID(@PathVariable Long id){
+        return ResponseEntity.ok(service.buscarFuncionarioPorID(id));
     }
 
     @GetMapping("/departamento/{departamentoId}")
-    public List<FuncionarioRespostaDTO> listarFuncionariosPorDepartamento(@Valid @PathVariable Long id){
-        return service.listarFuncionariosPorDepartamento(id);
+    public ResponseEntity<List<FuncionarioRespostaDTO>> listarFuncionariosPorDepartamento(@PathVariable Long id){
+        return ResponseEntity.ok(service.listarFuncionariosPorDepartamento(id));
     }
 
     @GetMapping("/nome/{nome}")
-    public FuncionarioRespostaDTO buscarFuncionarioPorNome(@Valid @PathVariable String nome){
-        return service.buscarFuncionarioPorNome(nome);
+    public ResponseEntity<FuncionarioRespostaDTO> buscarFuncionarioPorNome(@PathVariable String nome){
+        return ResponseEntity.ok(service.buscarFuncionarioPorNome(nome));
     }
 
     @GetMapping("/{id}/{nome}")
-    public FuncionarioRespostaDTO buscarFuncionarioPorIdENome(@Valid @PathVariable Long id, @PathVariable String nome){
-        return service.buscarFuncionarioPorIdENome(id, nome);
+    public ResponseEntity<FuncionarioRespostaDTO> buscarFuncionarioPorIdENome(@PathVariable Long id, @PathVariable String nome){
+        return ResponseEntity.ok(service.buscarFuncionarioPorIdENome(id, nome));
     }
 
     @PutMapping("/{id}")
-    public FuncionarioRespostaDTO atualizarFuncionario(@Valid @PathVariable Long id, @RequestBody FuncionarioRequisicaoDTO funcionario){
-        return service.atualizarFuncionario(id, funcionario);
+    public ResponseEntity<FuncionarioRespostaDTO> atualizarFuncionario(@Valid @PathVariable Long id, @RequestBody FuncionarioRequisicaoDTO funcionario){
+        return ResponseEntity.ok(service.atualizarFuncionario(id, funcionario));
     }
 
     @DeleteMapping("/{id}")
-    public void deletarFuncionario(@Valid @PathVariable Long id){
+    public ResponseEntity<Void> deletarFuncionario(@PathVariable Long id){
         service.deletarFuncionario(id);
+        return ResponseEntity.noContent().build();
     }
 }
